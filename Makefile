@@ -6,6 +6,7 @@ config ?= release
 BUILD_DIR ?= build/$(config)
 SRC_DIR ?= http
 EXAMPLES_DIR ?= examples
+BENCH_DIR := $(BUILD_DIR)/benchmarks
 binary := $(BUILD_DIR)/test
 
 SOURCE_FILES := $(shell find $(SRC_DIR) -name \*.pony)
@@ -24,8 +25,14 @@ endif
 test: $(binary)
 	$(binary)
 
+bench: $(BENCH_DIR)
+	$(BENCH_DIR)
+
 $(binary): $(SOURCE_FILES) | $(BUILD_DIR)
 	stable env $(PONYC) $(PONYC_FLAGS) $(SRC_DIR)/test -o $(BUILD_DIR)
+
+$(BENCH_DIR): $(SOURCE_FILES) | $(BUILD_DIR)
+	stable env $(PONYC) $(PONYC_FLAGS) $(SRC_DIR)/benchmarks -o $(BUILD_DIR)
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
